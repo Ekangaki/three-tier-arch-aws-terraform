@@ -19,26 +19,33 @@ module "alb_http_sg" {
 
 module "alb" {
   source          = "terraform-aws-modules/alb/aws"
+  version         = "~> 8.0" # Make sure to use a version that supports the new 'listeners' block
   name            = var.alb_name
   vpc_id          = module.vpc.vpc_id
   subnets         = module.vpc.public_subnets
   security_groups = [module.alb_http_sg.security_group_id]
 
-  http_tcp_listeners = [
-    {
-      port               = 80
-      protocol           = "HTTP"
-      target_group_index = 0
+  # Corrected listeners block
+  listeners = {
+    http_80 = {
+      port     = 80
+      protocol = "HTTP"
+      forward = {
+        target_group_key = "default"
+      }
     }
-  ]
+  }
 
-  target_groups = [
-    {
+  target_groups = {
+    default = {
       name             = var.alb_target_group_name
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
-      stickiness       = { "enabled" = true, "type" = "lb_cookie" }
+      stickiness = {
+        enabled = true
+        type    = "lb_cookie"
+      }
       health_check = {
         enabled             = true
         interval            = 30
@@ -50,8 +57,8 @@ module "alb" {
         protocol            = "HTTP"
         matcher             = "200-399"
       }
-    },
-  ]
+    }
+  }
 
   tags = var.alb_tags
 }
