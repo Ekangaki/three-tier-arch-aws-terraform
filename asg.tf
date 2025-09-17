@@ -37,7 +37,7 @@ EOT
 
 module "asg_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 5.0"
+
 
   name        = var.asg_sg_name
   description = var.asg_sg_description
