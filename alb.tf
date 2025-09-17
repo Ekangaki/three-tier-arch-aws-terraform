@@ -18,15 +18,14 @@ module "alb_http_sg" {
 ################################################################################
 
 module "alb" {
-  # Change the source to the correct module
-  source          = "terraform-aws-modules/aws/alb"
+  source          = "terraform-aws-modules/alb/aws"
   version         = "~> 8.0"
   name            = var.alb_name
   vpc_id          = module.vpc.vpc_id
   subnets         = module.vpc.public_subnets
   security_groups = [module.alb_http_sg.security_group_id]
 
-  # The rest of your code is now correct for this module
+  # This is the corrected block for listeners
   listeners = {
     http_80 = {
       port     = 80
@@ -60,5 +59,6 @@ module "alb" {
       }
     }
   }
+
   tags = var.alb_tags
 }
