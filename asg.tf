@@ -62,18 +62,19 @@ module "asg_sg" {
 
 module "asg" {
   source = "terraform-aws-modules/autoscaling/aws"
+  version = "~> 6.0" # Make sure to use a version that supports the new 'target_group_arns' block
 
   # Autoscaling group
   name = var.asg_name
 
-  min_size                  = var.asg_min_size
-  max_size                  = var.asg_max_size
-  desired_capacity          = var.asg_desired_capacity
+  min_size              = var.asg_min_size
+  max_size              = var.asg_max_size
+  desired_capacity      = var.asg_desired_capacity
   wait_for_capacity_timeout = var.asg_wait_for_capacity_timeout
-  health_check_type         = var.asg_health_check_type
-  vpc_zone_identifier       = module.vpc.private_subnets
-  target_group_arns         = module.alb.target_group_arns
-  user_data                 = base64encode(local.user_data)
+  health_check_type     = var.asg_health_check_type
+  vpc_zone_identifier   = module.vpc.private_subnets
+  target_group_arns     = [aws_lb_target_group.alb_target_group.arn] # Corrected reference
+  user_data             = base64encode(local.user_data)
 
   # Launch template
   launch_template_name        = var.asg_launch_template_name
