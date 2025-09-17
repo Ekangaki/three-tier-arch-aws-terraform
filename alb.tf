@@ -4,7 +4,6 @@
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "~> 5.0"
 
   name        = var.alb_sg_name
   vpc_id      = module.vpc.vpc_id
@@ -20,7 +19,6 @@ module "alb_http_sg" {
 
 module "alb" {
   source          = "terraform-aws-modules/alb/aws"
-  version         = "~> 5.0"
   name            = var.alb_name
   vpc_id          = module.vpc.vpc_id
   subnets         = module.vpc.public_subnets
