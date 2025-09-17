@@ -4,7 +4,7 @@
 
 module "security_group" {
   source      = "terraform-aws-modules/security-group/aws"
-  version     = "~> 4.0"
+  version     = "~> 5.0"
   name        = var.rds_sg_name
   description = var.rds_sg_description
   vpc_id      = module.vpc.vpc_id
